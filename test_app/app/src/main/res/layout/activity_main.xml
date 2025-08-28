@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TIRO Test App - Filesystem Vulnerabilities"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Name:"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/fileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter filename (e.g., ../../../private/sensitive.txt)"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Content:"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/fileContent"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="Enter file content"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/writeFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Write File (Path Traversal Test)"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/processIntent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Process External Intent"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Commands:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="adb shell am start -n com.tiro.testapp/.VulnerableActivity -a com.tiro.testapp.PROCESS_FILE --es file_path '../../../data/sensitive.txt' --es operation 'write' --es data 'pwned'"
+        android:textSize="10sp"
+        android:layout_marginBottom="8dp"
+        android:background="#f0f0f0"
+        android:padding="4dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="adb shell am startservice -n com.tiro.testapp/.VulnerableService -a com.tiro.testapp.FILE_SERVICE --es log_type 'custom' --es custom_path '../../../hijacked.log' --es message 'hijacked'"
+        android:textSize="10sp"
+        android:layout_marginBottom="8dp"
+        android:background="#f0f0f0"
+        android:padding="4dp" />
+
+</LinearLayout>

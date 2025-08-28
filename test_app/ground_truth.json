@@ -1,0 +1,855 @@
+{
+  "testCases": {
+    "ICC_1": {
+      "testId": "ICC_1",
+      "testClass": "BasicICCTests",
+      "testMethod": "testStartService1",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testStartService1",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestService", "type": "startService", "action": "ACTION_TEST_1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestService.handleServiceTest1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_TEST_1\")",
+          "auth_level.equals(\"user\")",
+          "filePath != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_service1.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "startService",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestService"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_2": {
+      "testId": "ICC_2",
+      "testClass": "BasicICCTests",
+      "testMethod": "testStartService2",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testStartService2",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestService", "type": "startService", "action": "ACTION_TEST_2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestService.handleServiceTest2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_TEST_2\")",
+          "auth_level.equals(\"admin\")",
+          "filePath != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_service2.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "startService",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestService"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_3": {
+      "testId": "ICC_3",
+      "testClass": "BasicICCTests",
+      "testMethod": "testSendBroadcast1",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testSendBroadcast1",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_BROADCAST_1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleBroadcastTest1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_BROADCAST_1\")",
+          "logData != null",
+          "logPath != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_broadcast1.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "sendBroadcast",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_4": {
+      "testId": "ICC_4",
+      "testClass": "BasicICCTests",
+      "testMethod": "testSendBroadcast2",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testSendBroadcast2",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_BROADCAST_2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleBroadcastTest2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_BROADCAST_2\")",
+          "logData != null",
+          "logPath != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_broadcast2.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "sendBroadcast",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_5": {
+      "testId": "ICC_5",
+      "testClass": "BasicICCTests",
+      "testMethod": "testContentProvider1",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testContentProvider1",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestContentProvider", "type": "contentProviderInsert", "uri": "content://com.test.icc.provider/files/test1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestContentProvider.handleProviderTest1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "uri.getPath().contains(\"/files/test1\")",
+          "fileName.equals(\"provider1.dat\")",
+          "filePath != null",
+          "content != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_provider1.dat"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "contentProviderInsert",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestContentProvider"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_6": {
+      "testId": "ICC_6",
+      "testClass": "BasicICCTests",
+      "testMethod": "testContentProvider2",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testContentProvider2",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestContentProvider", "type": "contentProviderInsert", "uri": "content://com.test.icc.provider/files/test2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestContentProvider.handleProviderTest2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "uri.getPath().contains(\"/files/test2\")",
+          "fileName.equals(\"provider2.dat\")",
+          "filePath != null",
+          "content != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/icc_provider2.dat"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "contentProviderInsert",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestContentProvider"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_7": {
+      "testId": "ICC_7",
+      "testClass": "BasicICCTests",
+      "testMethod": "testRegisterReceiver1",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testRegisterReceiver1",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "MyBroadcastReceiver", "type": "dynamicBroadcast", "action": "ACTION_DYNAMIC_1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "MyBroadcastReceiver.handleDynamicReceiver1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_DYNAMIC_1\")",
+          "testData != null",
+          "logPath.equals(\"/data/dynamic1.log\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/dynamic1.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "dynamicBroadcast",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "MyBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_8": {
+      "testId": "ICC_8",
+      "testClass": "BasicICCTests",
+      "testMethod": "testRegisterReceiver2",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testRegisterReceiver2",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "MyBroadcastReceiver", "type": "dynamicBroadcast", "action": "ACTION_DYNAMIC_2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "MyBroadcastReceiver.handleDynamicReceiver2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "intent.getAction().equals(\"ACTION_DYNAMIC_2\")",
+          "testData != null",
+          "logPath.equals(\"/data/dynamic2.log\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/dynamic2.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "dynamicBroadcast",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "MyBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_9": {
+      "testId": "ICC_9",
+      "testClass": "BasicICCTests",
+      "testMethod": "testMessenger1",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testMessenger1",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestHandler", "type": "messenger", "messageWhat": 1}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestHandler.handleMessengerTest1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "msg.what == 1",
+          "testData.equals(\"messenger test 1\")",
+          "logPath.equals(\"/data/messenger1.log\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/messenger1.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "messenger",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestHandler"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "ICC_10": {
+      "testId": "ICC_10",
+      "testClass": "BasicICCTests",
+      "testMethod": "testMessenger2",
+      "executionPath": {
+        "entryPoint": "BasicICCTests.testMessenger2",
+        "iccHops": [
+          {"from": "BasicICCTests", "to": "TestHandler", "type": "messenger", "messageWhat": 2}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestHandler.handleMessengerTest2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "msg.what == 2",
+          "testData.equals(\"messenger test 2\")",
+          "logPath.equals(\"/data/messenger2.log\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/messenger2.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "messenger",
+        "sourceComponent": "BasicICCTests",
+        "targetComponent": "TestHandler"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "DIRECT_1": {
+      "testId": "DIRECT_1",
+      "testClass": "DirectFileTests",
+      "testMethod": "hijackingTest1",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.hijackingTest1",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.hijackingTest1"
+      },
+      "constraints": {
+        "executionConstraints": ["true"],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/hijack1.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "DIRECT_2": {
+      "testId": "DIRECT_2",
+      "testClass": "DirectFileTests",
+      "testMethod": "hijackingTest2",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.hijackingTest2",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.hijackingTest2"
+      },
+      "constraints": {
+        "executionConstraints": ["true"],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/hijack2.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "DIRECT_3": {
+      "testId": "DIRECT_3",
+      "testClass": "DirectFileTests",
+      "testMethod": "hijackingTest3",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.hijackingTest3",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.hijackingTest3"
+      },
+      "constraints": {
+        "executionConstraints": ["true"],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/hijack3.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "HARD_CODED"
+      }
+    },
+    "DIRECT_4": {
+      "testId": "DIRECT_4",
+      "testClass": "DirectFileTests",
+      "testMethod": "traversalTest1",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.traversalTest1",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.traversalTest1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "userInput != null",
+          "userInput.length() > 0"
+        ],
+        "filePathConstraints": {
+          "type": "USER_INPUT",
+          "pathPattern": "/data/user/{userInput}.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "traversal",
+        "pathType": "USER_INPUT"
+      }
+    },
+    "DIRECT_5": {
+      "testId": "DIRECT_5",
+      "testClass": "DirectFileTests",
+      "testMethod": "traversalTest2",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.traversalTest2",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.traversalTest2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "userInput != null",
+          "userInput.length() > 5"
+        ],
+        "filePathConstraints": {
+          "type": "USER_INPUT",
+          "pathPattern": "/data/validated/{userInput}.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "traversal",
+        "pathType": "USER_INPUT"
+      }
+    },
+    "DIRECT_6": {
+      "testId": "DIRECT_6",
+      "testClass": "DirectFileTests",
+      "testMethod": "traversalTest3",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.traversalTest3",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.traversalTest3"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "prefix != null",
+          "suffix != null"
+        ],
+        "filePathConstraints": {
+          "type": "USER_INPUT",
+          "pathPattern": "/data/{prefix}_combined_{suffix}.dat"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "traversal",
+        "pathType": "USER_INPUT"
+      }
+    },
+    "DIRECT_7": {
+      "testId": "DIRECT_7",
+      "testClass": "DirectFileTests",
+      "testMethod": "executionOnly1",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.executionOnly1",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(int)>",
+        "sinkLocation": "DirectFileTests.executionOnly1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "System.currentTimeMillis() > 0"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/exec1.bin"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "execution",
+        "pathType": "EXECUTION_ONLY"
+      }
+    },
+    "DIRECT_8": {
+      "testId": "DIRECT_8",
+      "testClass": "DirectFileTests",
+      "testMethod": "executionOnly2",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.executionOnly2",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.executionOnly2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "condition == true"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/exec2.bin"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "execution",
+        "pathType": "EXECUTION_ONLY"
+      }
+    },
+    "DIRECT_9": {
+      "testId": "DIRECT_9",
+      "testClass": "DirectFileTests",
+      "testMethod": "executionOnly3",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.executionOnly3",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(int)>",
+        "sinkLocation": "DirectFileTests.executionOnly3"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "value > 5"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/exec3.bin"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "execution",
+        "pathType": "EXECUTION_ONLY"
+      }
+    },
+    "DIRECT_10": {
+      "testId": "DIRECT_10",
+      "testClass": "DirectFileTests",
+      "testMethod": "executionOnly4",
+      "executionPath": {
+        "entryPoint": "DirectFileTests.executionOnly4",
+        "iccHops": [],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "DirectFileTests.executionOnly4"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "trigger.equals(\"execute\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/exec4.bin"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": false,
+        "iccType": "none"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "execution",
+        "pathType": "EXECUTION_ONLY"
+      }
+    },
+    "COMPLEX_1": {
+      "testId": "COMPLEX_1",
+      "testClass": "ComplexICCTests",
+      "testMethod": "multiHopICC1",
+      "executionPath": {
+        "entryPoint": "ComplexICCTests.multiHopICC1",
+        "iccHops": [
+          {"from": "ComplexICCTests", "to": "TestService", "type": "startService", "action": "ACTION_MULTIHOP_1"},
+          {"from": "TestService", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_MULTIHOP_BROADCAST_1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleMultiHopBroadcast1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "nextStep.equals(\"broadcast\")",
+          "source.equals(\"service\")",
+          "ComplexICCTests.SHARED_DATA != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/multihop1.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "multiHopService",
+        "sourceComponent": "ComplexICCTests",
+        "intermediateComponent": "TestService",
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "MULTI_HOP_ICC"
+      }
+    },
+    "COMPLEX_2": {
+      "testId": "COMPLEX_2",
+      "testClass": "ComplexICCTests",
+      "testMethod": "multiHopICC2",
+      "executionPath": {
+        "entryPoint": "ComplexICCTests.multiHopICC2",
+        "iccHops": [
+          {"from": "ComplexICCTests", "to": "TestService", "type": "startService", "action": "ACTION_MULTIHOP_2"},
+          {"from": "TestService", "to": "TestContentProvider", "type": "contentProviderInsert", "uri": "content://com.test.icc.provider/multihop/step2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestContentProvider.handleMultiHopStep2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "nextStep.equals(\"provider\")",
+          "source.equals(\"service\")",
+          "ComplexICCTests.SHARED_DATA != null"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/multihop2.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "multiHopProvider",
+        "sourceComponent": "ComplexICCTests",
+        "intermediateComponent": "TestService",
+        "targetComponent": "TestContentProvider"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "MULTI_HOP_ICC"
+      }
+    },
+    "COMPLEX_3": {
+      "testId": "COMPLEX_3",
+      "testClass": "ComplexICCTests",
+      "testMethod": "staticFieldICC1",
+      "executionPath": {
+        "entryPoint": "ComplexICCTests.staticFieldICC1",
+        "iccHops": [
+          {"from": "ComplexICCTests", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_READ_STATIC_1"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleStaticFieldICC1"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "ComplexICCTests.SHARED_DATA != null",
+          "ComplexICCTests.SHARED_DATA.startsWith(\"static1_\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/static_field1.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "staticFieldBroadcast",
+        "sourceComponent": "ComplexICCTests",
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "STATIC_FIELD_ICC"
+      }
+    },
+    "COMPLEX_4": {
+      "testId": "COMPLEX_4",
+      "testClass": "ComplexICCTests",
+      "testMethod": "staticFieldICC2",
+      "executionPath": {
+        "entryPoint": "ComplexICCTests.staticFieldICC2",
+        "iccHops": [
+          {"from": "ComplexICCTests", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_READ_STATIC_2"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleStaticFieldICC2"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "ComplexICCTests.SHARED_DATA != null",
+          "ComplexICCTests.SHARED_DATA.startsWith(\"static2_\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/static_field2.log"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "staticFieldBroadcast",
+        "sourceComponent": "ComplexICCTests",
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "STATIC_FIELD_ICC"
+      }
+    },
+    "COMPLEX_5": {
+      "testId": "COMPLEX_5",
+      "testClass": "ComplexICCTests",
+      "testMethod": "mixedICC",
+      "executionPath": {
+        "entryPoint": "ComplexICCTests.mixedICC",
+        "iccHops": [
+          {"from": "ComplexICCTests", "to": "TestService", "type": "startService", "action": "ACTION_MIXED_START"},
+          {"from": "TestService", "to": "TestContentProvider", "type": "contentProviderInsert", "uri": "content://com.test.icc.provider/mixed/chain"},
+          {"from": "TestContentProvider", "to": "TestBroadcastReceiver", "type": "sendBroadcast", "action": "ACTION_MIXED_FINAL"}
+        ],
+        "targetSink": "<java.io.FileOutputStream: void write(byte[])>",
+        "sinkLocation": "TestBroadcastReceiver.handleMixedICCFinal"
+      },
+      "constraints": {
+        "executionConstraints": [
+          "targetPath != null",
+          "chainStep.equals(\"provider\")",
+          "chainStep.equals(\"final\")"
+        ],
+        "filePathConstraints": {
+          "type": "HARD_CODED",
+          "expectedPath": "/data/mixed_icc.txt"
+        }
+      },
+      "iccMetadata": {
+        "hasICC": true,
+        "iccType": "mixedICCChain",
+        "sourceComponent": "ComplexICCTests",
+        "intermediateComponents": ["TestService", "TestContentProvider"],
+        "targetComponent": "TestBroadcastReceiver"
+      },
+      "expectedPathSentinelResults": {
+        "shouldDetectPath": true,
+        "vulnerabilityType": "hijacking",
+        "pathType": "MIXED_ICC"
+      }
+    }
+  },
+  "summary": {
+    "totalPaths": 25,
+    "iccPaths": 15,
+    "directPaths": 10,
+    "hijackingPaths": 17,
+    "traversalPaths": 3,
+    "executionOnlyPaths": 5,
+    "pathDistribution": {
+      "BasicICCTests": 10,
+      "DirectFileTests": 10,
+      "ComplexICCTests": 5
+    },
+    "iccTypeDistribution": {
+      "startService": 4,
+      "sendBroadcast": 4,
+      "contentProviderInsert": 4,
+      "dynamicBroadcast": 2,
+      "messenger": 2,
+      "multiHopService": 1,
+      "multiHopProvider": 1,
+      "staticFieldBroadcast": 2,
+      "mixedICCChain": 1
+    },
+    "vulnerabilityTypeDistribution": {
+      "hijacking": 17,
+      "traversal": 3,
+      "execution": 4,
+      "multiHop": 2,
+      "staticField": 2,
+      "mixed": 1
+    }
+  }
+}

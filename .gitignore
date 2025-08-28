@@ -1,0 +1,63 @@
+# Build outputs
+build/
+bin/
+out/
+*.jar
+!libs/*.jar
+
+# Gradle wrapper (keep)
+!gradle/wrapper/gradle-wrapper.jar
+
+# Test outputs
+pathSentOutput/
+sootOutput/
+iccVerificationTest/
+
+# Logs and dumps
+*.log
+*.hprof
+log[0-9]*
+
+# IDE files
+.idea/
+*.iml
+.gradle/
+.vscode/
+
+# Test APK files
+*.apk
+!test_app/app/build/outputs/apk/debug/app-debug.apk
+
+# Temporary files
+*.tmp
+*.bak
+*~
+.DS_Store
+
+# OS specific
+Thumbs.db
+.directory
+
+# Analysis results
+constraints/
+appInfo.json
+icc_model.txt
+
+# Development files
+*.zip
+*.tar.gz
+static/
+
+# Test validation outputs
+test_app/build/
+test_app/validation/results/
+
+# Documentation files - exclude all .md files
+*.md
+
+# Hidden directories and development files
+.serena/
+.claude/
+.idea/
+.gradle/
+.vscode/

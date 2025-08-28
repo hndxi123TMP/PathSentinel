@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec -a PathSentStaticAnalysis bash -c "./gradlew run -q -PappArgs=\"$*\""

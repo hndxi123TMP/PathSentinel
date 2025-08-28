@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.test.pathsent_tester">
+
+    <!-- Permissions for ICC testing -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <!-- ================================================================ -->
+        <!-- ICC-FOCUSED TEST APPLICATION - EXACTLY 25 EXECUTION PATHS       -->
+        <!-- ================================================================ -->
+
+        <!-- Main Activity - Minimal launcher -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- BasicICCTests Activity - 10 ICC paths -->
+        <activity
+            android:name=".BasicICCTests"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="TEST_BASIC_ICC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- DirectFileTests Activity - 10 direct paths -->
+        <activity
+            android:name=".DirectFileTests"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="TEST_DIRECT_FILES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- ComplexICCTests Activity - 5 complex ICC paths -->
+        <activity
+            android:name=".ComplexICCTests"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="TEST_COMPLEX_ICC" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- TestService - Handles service ICC patterns -->
+        <service
+            android:name=".TestService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ACTION_TEST_1" />
+                <action android:name="ACTION_TEST_2" />
+                <action android:name="ACTION_MULTIHOP_1" />
+                <action android:name="ACTION_MULTIHOP_2" />
+                <action android:name="ACTION_MIXED_START" />
+            </intent-filter>
+        </service>
+
+        <!-- TestBroadcastReceiver - Handles broadcast ICC patterns -->
+        <receiver
+            android:name=".TestBroadcastReceiver"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="ACTION_BROADCAST_1" />
+                <action android:name="ACTION_BROADCAST_2" />
+                <action android:name="ACTION_READ_STATIC_1" />
+                <action android:name="ACTION_READ_STATIC_2" />
+                <action android:name="ACTION_MULTIHOP_BROADCAST_1" />
+                <action android:name="ACTION_MIXED_FINAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- TestContentProvider - Handles provider ICC patterns -->
+        <provider
+            android:name=".TestContentProvider"
+            android:authorities="com.test.icc.provider"
+            android:exported="true"
+            android:grantUriPermissions="true" />
+
+    </application>
+</manifest>

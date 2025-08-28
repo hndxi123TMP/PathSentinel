@@ -1,0 +1,106 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'checkstyle'
+
+mainClassName = "pathsent.PathSentStaticAnalysis"
+sourceCompatibility = 11
+targetCompatibility = 11
+
+jar {
+    archiveBaseName = 'PathSentStaticAnalysis'
+    archiveVersion = '0.2.0'
+    manifest { attributes 'Main-Class': mainClassName }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Soot and FlowDroid - latest versions
+    implementation 'org.soot-oss:soot:4.6.0'
+    implementation('de.fraunhofer.sit.sse.flowdroid:soot-infoflow:2.14.1') {
+        exclude group: 'org.soot-oss', module: 'soot'
+    }
+    implementation('de.fraunhofer.sit.sse.flowdroid:soot-infoflow-android:2.14.1') {
+        exclude group: 'org.soot-oss', module: 'soot'
+        exclude group: 'de.fraunhofer.sit.sse.flowdroid', module: 'soot-infoflow'
+    }
+    
+    // Z3 solver
+    implementation fileTree(dir: 'libs', include: 'com.microsoft.z3*.jar')
+    
+    // Android XML parsing
+    implementation fileTree(dir: 'libs', include: 'axml*.jar')
+    
+    // Java runtime (needed for Android analysis)
+    implementation fileTree(dir: 'libs', include: 'rt.jar')
+    
+    // Other dependencies
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
+    implementation 'commons-cli:commons-cli:1.5.0'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+}
+
+checkstyle {
+    toolVersion '7.8.1'
+    configFile file("checkstyle.xml")
+}
+
+checkstyleMain.exclude 'soot/**'
+
+distZip {
+    into(project.name + '/libs') {
+        from './libs'
+    }
+}
+
+task fatJar(type: Jar) {
+    archiveBaseName = 'PathSentStaticAnalysis-all'
+    manifest { attributes 'Main-Class': mainClassName }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+//artifacts {
+//    archives fatJar
+//}
+
+run {
+    if (project.hasProperty("appArgs")) {
+        if (appArgs.contains("[")) {
+            args Eval.me(appArgs)
+        } else {
+            args appArgs.split()
+        }
+    }
+
+    jvmArgs "-Xmx8g", "-Xms6g", "-XX:NewSize=4g", "-XX:NewRatio=2", "-Djava.library.path=/usr/lib/x86_64-linux-gnu/jni:/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu"
+}
+
+processTestResources.enabled = false
+compileTestJava.enabled = false
+checkstyleTest.enabled = false
+testClasses.enabled = false
+test.enabled = false
+
+wrapper {
+    gradleVersion = '8.5'
+}
+

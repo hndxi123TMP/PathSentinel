@@ -1,0 +1,230 @@
+#!/bin/bash
+
+# PathSentinel Static Analysis Runner
+# Usage: ./PathSentinelStaticAnalysis <APK_FILE> [OPTIONS]
+
+# Default values
+OUTPUT_DIR="pathSentOutput"
+TARGET_METHODS="targetedMethods.txt"
+THREADS=1
+TIMEOUT=10
+SHOW_STDOUT=true
+SHOW_CONSTRAINTS=false
+SHOW_SOOT=false
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to show usage
+show_usage() {
+    echo -e "${BLUE}PathSentinel Static Analysis Tool${NC}"
+    echo "Usage: $0 <APK_FILE> [OPTIONS]"
+    echo ""
+    echo "Required:"
+    echo "  <APK_FILE>          Path to the APK file to analyze"
+    echo ""
+    echo "Options:"
+    echo "  -o, --output DIR    Output directory (default: pathSentOutput)"
+    echo "  -t, --targets FILE  Target methods file (default: targetedMethods.txt)"
+    echo "  -j, --threads NUM   Number of threads for analysis (default: 1)"
+    echo "  -k, --timeout MIN   Analysis timeout in minutes (default: 10)"
+    echo "  -x, --nostdout      Suppress path output to stdout"
+    echo "  -y, --constraints   Print constraints to stdout"
+    echo "  -z, --sootOutput    Show Soot/FlowDroid debug output"
+    echo "  -h, --help          Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 app.apk"
+    echo "  $0 app.apk -o results -j 4 -k 15"
+    echo "  $0 app.apk --output myresults --constraints"
+}
+
+# Parse command line arguments
+APK_FILE=""
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_usage
+            exit 0
+            ;;
+        -o|--output)
+            OUTPUT_DIR="$2"
+            shift 2
+            ;;
+        -t|--targets)
+            TARGET_METHODS="$2"
+            shift 2
+            ;;
+        -j|--threads)
+            THREADS="$2"
+            shift 2
+            ;;
+        -k|--timeout)
+            TIMEOUT="$2"
+            shift 2
+            ;;
+        -x|--nostdout)
+            SHOW_STDOUT=false
+            shift
+            ;;
+        -y|--constraints)
+            SHOW_CONSTRAINTS=true
+            shift
+            ;;
+        -z|--sootOutput)
+            SHOW_SOOT=true
+            shift
+            ;;
+        -*)
+            echo -e "${RED}Error: Unknown option $1${NC}"
+            show_usage
+            exit 1
+            ;;
+        *)
+            if [[ -z "$APK_FILE" ]]; then
+                APK_FILE="$1"
+            else
+                echo -e "${RED}Error: Multiple APK files specified${NC}"
+                show_usage
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Check if APK file is provided
+if [[ -z "$APK_FILE" ]]; then
+    echo -e "${RED}Error: APK file is required${NC}"
+    show_usage
+    exit 1
+fi
+
+# Check if APK file exists
+if [[ ! -f "$APK_FILE" ]]; then
+    echo -e "${RED}Error: APK file '$APK_FILE' not found${NC}"
+    exit 1
+fi
+
+# Check if JAR file exists
+JAR_FILE="build/libs/PathSentStaticAnalysis-all.jar"
+if [[ ! -f "$JAR_FILE" ]]; then
+    echo -e "${RED}Error: PathSentinel JAR file not found at $JAR_FILE${NC}"
+    echo "Please run: ./gradlew fatJar"
+    exit 1
+fi
+
+# Check if target methods file exists
+if [[ ! -f "$TARGET_METHODS" ]]; then
+    echo -e "${YELLOW}Warning: Target methods file '$TARGET_METHODS' not found${NC}"
+    echo "Using default target methods..."
+fi
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+# Build command arguments
+ARGS=()
+ARGS+=("-o" "$OUTPUT_DIR")
+if [[ -f "$TARGET_METHODS" ]]; then
+    ARGS+=("-t" "$TARGET_METHODS")
+fi
+if [[ "$THREADS" -gt 1 ]]; then
+    ARGS+=("-j" "$THREADS")
+fi
+if [[ "$TIMEOUT" -ne 10 ]]; then
+    ARGS+=("-k" "$TIMEOUT")
+fi
+if [[ "$SHOW_STDOUT" == false ]]; then
+    ARGS+=("-x")
+fi
+if [[ "$SHOW_CONSTRAINTS" == true ]]; then
+    ARGS+=("-y")
+fi
+if [[ "$SHOW_SOOT" == true ]]; then
+    ARGS+=("-z")
+fi
+
+# Show analysis info
+echo -e "${BLUE}=== PathSentinel Static Analysis ===${NC}"
+echo -e "${GREEN}APK File:${NC} $APK_FILE"
+echo -e "${GREEN}Output Directory:${NC} $OUTPUT_DIR"
+echo -e "${GREEN}Target Methods:${NC} $TARGET_METHODS"
+echo -e "${GREEN}Threads:${NC} $THREADS"
+echo -e "${GREEN}Timeout:${NC} ${TIMEOUT} minutes"
+echo ""
+
+# Get APK info
+echo -e "${YELLOW}APK Information:${NC}"
+if command -v aapt >/dev/null 2>&1; then
+    aapt dump badging "$APK_FILE" 2>/dev/null | grep "package\|application" | head -2
+else
+    echo "aapt not found - skipping APK info"
+fi
+echo ""
+
+# Record start time
+START_TIME=$(date +%s)
+echo -e "${GREEN}Starting analysis at $(date)${NC}"
+echo ""
+
+# Run PathSentinel analysis
+echo -e "${BLUE}Running PathSentinel...${NC}"
+java -Xmx8g -Xms6g -XX:NewSize=4g \
+     -jar "$JAR_FILE" \
+     "${ARGS[@]}" \
+     "$APK_FILE"
+
+# Capture exit code
+EXIT_CODE=$?
+
+# Calculate execution time
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+MINUTES=$((DURATION / 60))
+SECONDS=$((DURATION % 60))
+
+echo ""
+echo -e "${BLUE}=== Analysis Complete ===${NC}"
+echo -e "${GREEN}Execution Time:${NC} ${MINUTES}m ${SECONDS}s"
+
+if [[ $EXIT_CODE -eq 0 ]]; then
+    echo -e "${GREEN}Status:${NC} SUCCESS"
+    
+    # Show results summary
+    if [[ -d "$OUTPUT_DIR" ]]; then
+        echo -e "${GREEN}Output Directory:${NC} $OUTPUT_DIR"
+        
+        # Count results
+        if [[ -d "$OUTPUT_DIR" ]]; then
+            HIJACKING_COUNT=$(find "$OUTPUT_DIR" -name "metadata.json" -exec grep -l '"hijacking"' {} \; 2>/dev/null | wc -l)
+            TRAVERSAL_COUNT=$(find "$OUTPUT_DIR" -name "metadata.json" -exec grep -l '"traversal"' {} \; 2>/dev/null | wc -l)
+            TOTAL_COUNT=$(find "$OUTPUT_DIR" -name "metadata.json" 2>/dev/null | wc -l)
+            
+            echo -e "${GREEN}Results Found:${NC}"
+            echo "  • Total vulnerabilities: $TOTAL_COUNT"
+            echo "  • Hijacking vulnerabilities: $HIJACKING_COUNT"
+            echo "  • Traversal vulnerabilities: $TRAVERSAL_COUNT"
+            echo ""
+            
+            # Show key output files
+            if [[ -f "$OUTPUT_DIR"/*/*/appInfo.json ]]; then
+                echo -e "${GREEN}Key Output Files:${NC}"
+                find "$OUTPUT_DIR" -name "appInfo.json" | head -1 | xargs -I {} echo "  • Main results: {}"
+                find "$OUTPUT_DIR" -name "path.txt" | head -3 | xargs -I {} echo "  • Path analysis: {}"
+            fi
+        fi
+    fi
+else
+    echo -e "${RED}Status:${NC} FAILED (Exit code: $EXIT_CODE)"
+    echo "Check the output above for error details"
+fi
+
+echo ""
+echo -e "${BLUE}Analysis completed at $(date)${NC}"
+
+exit $EXIT_CODE

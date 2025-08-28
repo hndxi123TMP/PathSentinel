@@ -1,0 +1,35 @@
+<java.io.OutputStream: void write(byte[])>
+<java.io.OutputStream: void write(byte[],int,int)>
+<java.io.OutputStream: void write(int)>
+
+<java.io.FileOutputStream: void write(byte[])>
+<java.io.FileOutputStream: void write(byte[],int,int)>
+<java.io.FileOutputStream: void write(int)>
+
+<java.io.Writer: void write(char[])>
+<java.io.Writer: void write(char[],int,int)>
+<java.io.Writer: void write(int)>
+<java.io.Writer: void write(java.lang.String)>
+<java.io.Writer: void write(java.lang.String,int,int)>
+
+<java.io.File: void <init>(java.lang.String)>
+<java.io.File: void <init>(java.lang.String,java.lang.String)>
+<java.io.File: void <init>(java.io.File,java.lang.String)>
+
+# ========================================================================
+# PHASE 4: CONSTRAINT VALIDATION TARGET METHODS
+# ========================================================================
+# These target methods are used specifically for constraint validation testing
+# Each method represents a sink that TIRO should be able to reach through
+# constraint-satisfying paths in the ConstraintValidationTests components
+
+# FileOutputStream constructors for constraint validation file operations
+<java.io.FileOutputStream: void <init>(java.io.File)>
+<java.io.FileOutputStream: void <init>(java.lang.String)>
+<java.io.FileOutputStream: void <init>(java.lang.String,boolean)>
+<java.io.FileOutputStream: void <init>(java.io.File,boolean)>
+
+# Additional File operations for constraint validation
+<java.io.File: boolean createNewFile()>
+<java.io.File: boolean mkdir()>
+<java.io.File: boolean mkdirs()>
